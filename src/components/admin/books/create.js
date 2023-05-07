@@ -12,6 +12,7 @@ export const CreateBook = () => {
         bookCategories:[]
     })
 
+    const [fileList,setFileList] = useState([])
     useEffect(() => {
         getData()
     })
@@ -150,10 +151,14 @@ export const CreateBook = () => {
 
                                     }}
                                     customRequest={(info) => {
-
+                                        
+                                        setFileList([info.file])
+                                        console.log(info)
                                     }}
+                                    showUploadList={(false)}
                                     >
                                         <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                                        {fileList[0]?.name}
                                     </Upload>
                                 </Form.Item>
                             </div>
