@@ -9,6 +9,6 @@ router.post("/api/admins/books/categories",bookCategoryValidator,BookCategoryCon
 router.put("/api/admins/books/categories/:id",bookCategoryValidator,BookCategoryController.update)
 router.delete("/api/admins/books/categories/:id",BookCategoryController.destroy)
 router.post("/api/admins/books/upload",(req,res) => {
-    res.send(req.body)
+    console.log(req.body)
 })
 module.exports = router

@@ -3,28 +3,11 @@ import { Sidebar } from "../sidebar"
 import { useEffect, useState } from "react";
 import { BookServer } from "./servers";
 import { UploadOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
 
 const { Option } = Select;
 
 export const CreateBook = () => {
-    const props: UploadProps = {
-        name: 'poster',
-        action: 'http://localhost:5000/api/admins/books/upload',
-        headers: {
-          authorization: 'authorization-text',
-        },
-        onChange(info) {
-          if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-          if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
-          } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-          }
-        },
-      };
+    
     const [bookData,setBookData] = useState({
         bookCategories:[]
     })
@@ -130,11 +113,46 @@ export const CreateBook = () => {
                                 <Form.Item
                                 label="Poster :"
                                 name="poster"
+                                valuePropName="fileList"
+                                getValueFromEvent={(event) => {
+                                    return event?.fileList;
+                                }}
                                 rules={[{
                                     required:true,message:"Poster is required!"
-                                }]}
+                                },
+                                {
+                                    validator(_,fileList){
+                                        return new Promise((resolve,reject) => {
+                                            if(fileList && fileList[0].size > 9000000){
+                                                reject("File size exceeted")
+                                            }
+                                            else{
+                                                resolve("Success")
+                                            }
+                                        })
+                                    }
+                                }
+
+                                ]}
                                 >
-                                    <Upload {...props}>
+                                    <Upload 
+                                        maxCount={1}
+                                        beforeUpload={(file) => {
+                                        return new Promise((resolve,reject) => {
+                                            if(file.size > 9000000){
+                                                reject("File size exceeded")
+                                            }
+                                            else{
+                                                resolve("Success")
+
+                                            }
+                                        })
+
+                                    }}
+                                    customRequest={(info) => {
+
+                                    }}
+                                    >
                                         <Button icon={<UploadOutlined />}>Click to Upload</Button>
                                     </Upload>
                                 </Form.Item>
